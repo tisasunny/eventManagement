@@ -1,14 +1,14 @@
 const express = require("express");
 const createHttpError = require("http-errors");
 const morgan = require("morgan");
-const mongoose = require("mongoose");
+const mongoose = require("./db/mongoose");
 require("dotenv").config();
 const session = require("express-session");
 const passport = require("passport");
 const connectMongo = require("connect-mongo");
 const { ensureLoggedIn } = require("connect-ensure-login");
 const { roles } = require("./utils/roles");
-const User = require("./models/user.model");
+const {User, registerAdmin} = require("./models/user.model");
 const fileUpload = require("express-fileupload");
 const connectFlash = require("connect-flash");
 const path = require('path');
@@ -86,6 +86,7 @@ app.use((req, res, next) => {
 
 // Error Handler
 app.use((error, req, res, next) => {
+  console.log(req)
   error.status = error.status || 500;
   res.status(error.status);
   res.render("error", { error });
@@ -94,42 +95,24 @@ app.use((error, req, res, next) => {
 // Setting the PORT
 const PORT = process.env.PORT || 3000;
 
+
+
+
+
+
 // Making a connection to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI, {
-    dbName: process.env.DB_NAME,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  })
-  .then(() => {
-    console.log("Mongodb💾 connected...");
-    registerAdmin();
-    app.listen(PORT, () =>
-      console.log(`Server Running 🚩🚩🚩 @ http://localhost:${PORT}`)
-    );
-  })
-  .catch((err) => console.log(err.message));
 
-// function for registering the admin
-async function registerAdmin() {
-  try {
-    const doesExist = await User.findOne({ email : process.env.ADMIN_EMAIL });
-    obj = {};
-    obj["username"] = process.env.ADMIN_USERNAME;
-    obj["email"] = process.env.ADMIN_EMAIL;
-    obj["password"] = process.env.ADMIN_PASSWORD;
-    obj["roleName"] = roles.admin;
+  app.listen(PORT, () =>
+  console.log(`Server Running 🚩🚩🚩 @ http://localhost:${PORT}`)
+);
+  // Bill Upload
 
-    if (!doesExist) {
-      const user = new User(obj);
-      await user.save();
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
+
+
+
+
+
+
 
 function ensureAdmin(req, res, next) {
   if (req.user.roleName === roles.admin) {
@@ -140,3 +123,4 @@ function ensureAdmin(req, res, next) {
     res.redirect("/");
   }
 }
+
