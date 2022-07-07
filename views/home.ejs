@@ -21,11 +21,13 @@
                       <a href="/admin/register-users">Register-Users</a>
                     <% } %> 
                     <% if(user.roleName === 'FACULTY') { %>
-                      <a href="/student/course-select">Add Events</a>
+                      <a href="/user/eventr">Add Events</a>
+                    
                     <% } %> 
                       <a href="/auth/logout">Logout</a>
                     <% } else { %>
-                      <a href="/auth/login">Login</a>   
+                      <a href="/auth/login">Login</a>  
+                      <a href="/auth/studentcalender">Calendar</a> 
                     <% } %>
             </div>
         </nav>

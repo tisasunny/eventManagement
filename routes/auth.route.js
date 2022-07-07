@@ -35,5 +35,13 @@ router.get(
     res.redirect("/");
   }
 );
-
+router.get(
+  '/studentcalender',    async (req, res, next) => {
+    try{
+        res.render("studentcalender");
+    }catch(err){
+        next(err);
+    }
+  }
+);
 module.exports = router;
