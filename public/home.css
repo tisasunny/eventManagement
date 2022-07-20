@@ -63,10 +63,8 @@ section h1{
     color: white;
 }
 @keyframes changetext{
-    0%{content: 'Let us';}
-    20%{content: 'Plan & Schedule';}
-    40%{content: 'Muthoot Events';}
-    
+    0%{content: 'Plan & Schedule';}
+    20%{content: 'Muthoot Events';}    
 }
 nav .menu a:hover{
     color: black;

@@ -21,7 +21,7 @@ router.post(
   "/login",
   ensureLoggedOut({ redirectTo: "/" }),
   passport.authenticate("local", {
-    successReturnToOrRedirect: "/",
+    successReturnToOrRedirect: "/user/dashboard",
     failureRedirect: "/auth/login",
     failureFlash: true,
   })

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="/home.css">
     <title>Event Managament</title>
 </head>
 <body>
@@ -21,18 +21,16 @@
                       <a href="/admin/register-users">Register-Users</a>
                     <% } %> 
                     <% if(user.roleName === 'FACULTY') { %>
-                      <a href="/student/course-select">Add Events</a> 
+                      <a href="/student/course-select">Add Events</a>
                     <% } %> 
                       <a href="/auth/logout">Logout</a>
-                    <% } else { %>
-                      <a href="/auth/login">Login</a>   
                     <% } %>
             </div>
         </nav>
         <main>
             <section>
                 <h3>Welcome to Mits Event Management </h3>
-                <h1>A place to <span class="change-text">  </span></h1>
+                <h1>AIM : <span class="change-text">  </span></h1>
             </section>
         </main>
     </header>
