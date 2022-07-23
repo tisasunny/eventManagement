@@ -1,70 +1,97 @@
-const router = require('express').Router();
-const multer=require('multer');
+const router = require("express").Router();
 const mongoose = require("./../db/mongoose");
-const fs=require('fs');
+const fs = require("fs");
+const { exec } = require("child_process");
+const path = require("path");
+const Image = require("../models/image.model.js");
 
-var imgSchema = mongoose.Schema({
-  img:{data:Buffer,contentType: String}
-});
-
-var image = mongoose.model("image",imgSchema);
-
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+router.get('/dashboard',async(req,res,next) => {
+  try {
+    res.render("dashboard");
+  } catch (error) {
+    next(error);
   }
 })
 
-const upload = multer({ storage: storage });
-router.get(
-    '/eventr',    async (req, res, next) => {
-      try{
-          res.render("eventr");
-      }catch(err){
-          next(err);
-      }
+// report generation code
+router.get("/generate-report", async (req, res, next) => {
+  try {
+    let list = "";
+    const docs = await Image.find({ email: `${req.user.email}` });
+    console.log(docs);
+    if(docs.length == 0){
+      throw new Error("You have not uploaded any images to generate report")
     }
-  );
+    docs.forEach((doc) => {
+      list = list + " " + doc.imagePath;
+    });
+    list = list.trim();
+    console.log(list);
+    let outputFilePath = Date.now() + "-report.pdf";
+    exec(`magick convert ${list} ${outputFilePath}`, (err, stderr, stdout) => {
+      if (err) throw err;
+      res.download(outputFilePath, (err) => {
+        if (err) throw err;
+        fs.unlinkSync(outputFilePath);
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    res.send(error + ` : Error uploading file <a href="/user/dashboard">Go back home</a> `);
+  }
+});
 
-  router.get(
-    '/manage-event',    async (req, res, next) => {
-      try{
-          res.render("event_page");
-      }catch(err){
-          next(err);
-      }
+// image upload code
+router.post("/manage-event/upload-bill", async (req, res, next) => {
+  try {
+    const file = req.files.mFile;
+    if (file.truncated) {
+      throw new Error("File size is too big...");
     }
-  );
-  router.get(
-    '/manage-event/upload-bill',    async (req, res, next) => {
-      try{
-          res.render("upload_bill");
-      }catch(err){
-          next(err);
-      }
+    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+      const fileName = new Date().getTime().toString() + path.extname(file.name);
+      const savePath = path.join(__dirname, "../public", "uploads", fileName);
+      const relativePath = path.join("public", "uploads", fileName);
+      await file.mv(savePath);
+      let obj = {};
+      obj["username"] = req.user.username;
+      obj["email"] = req.user.email;
+      obj["imagePath"] = relativePath;
+      const image = new Image(obj);
+      image.save();
     }
-  );
+    else{
+      throw new Error("Only jpg and png is allowed");
+    }
+    res.redirect("/");
+  } catch (error) {
+    console.log(error);
+    res.send(error + " : Error uploading file");
+  }
+});
 
-  router.post("/manage-event/upload-bill/uploadphoto",upload.single('myImage'),(req,res)=>{
-    var img = fs.readFileSync(req.file.path);
-    var encode_img = img.toString('base64');
-    var final_img = {
-        contentType:req.file.mimetype,
-        image:new Buffer(encode_img,'base64')
-    };
-    image.create(final_img,function(err,result){
-        if(err){
-            console.log(err);
-        }else{
-            console.log(result.img.Buffer);
-            console.log("Saved To database");
-            res.contentType(final_img.contentType);
-            res.send(final_img.image);
-        }
-    })
-  })
-  
+router.get("/eventr", async (req, res, next) => {
+  try {
+    res.render("eventr");
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/manage-event", async (req, res, next) => {
+  try {
+    res.render("event_page");
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/manage-event/upload-bill", async (req, res, next) => {
+  try {
+    res.render("upload_bill");
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

@@ -29,14 +29,14 @@ router.post(
 
 router.get(
   "/logout",
-  ensureLoggedIn({ redirectTo: "/" }),
+  ensureLoggedIn({ redirectTo: "/user/dashboard" }),
   async (req, res, next) => {
     req.logout();
     res.redirect("/");
   }
 );
 router.get(
-  '/studentcalender',    async (req, res, next) => {
+  '/studentcalender', async (req, res, next) => {
     try{
         res.render("studentcalender");
     }catch(err){
@@ -44,4 +44,5 @@ router.get(
     }
   }
 );
+
 module.exports = router;

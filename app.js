@@ -8,11 +8,10 @@ const passport = require("passport");
 const connectMongo = require("connect-mongo");
 const { ensureLoggedIn } = require("connect-ensure-login");
 const { roles } = require("./utils/roles");
-const {User, registerAdmin} = require("./models/user.model");
+const { User, registerAdmin } = require("./models/user.model");
 const fileUpload = require("express-fileupload");
 const connectFlash = require("connect-flash");
-const path = require('path');
-
+const path = require("path");
 
 // Initialization step
 const app = express();
@@ -54,13 +53,13 @@ app.use((req, res, next) => {
   next();
 });
 
+
 //using express-fileUpload
 app.use(
   fileUpload({
     useTempFiles: true,
-    tempFileDir: path.join(__dirname, 'tmp'),
+    tempFileDir: path.join(__dirname, "tmp"),
     createParentPath: true,
-    limits: { fileSize: 2 * 1024 * 1024 },
   })
 );
 
@@ -86,7 +85,7 @@ app.use((req, res, next) => {
 
 // Error Handler
 app.use((error, req, res, next) => {
-  console.log(req)
+  console.log(req);
   error.status = error.status || 500;
   res.status(error.status);
   res.render("error", { error });
@@ -95,24 +94,9 @@ app.use((error, req, res, next) => {
 // Setting the PORT
 const PORT = process.env.PORT || 3000;
 
-
-
-
-
-
-// Making a connection to MongoDB
-
-  app.listen(PORT, () =>
+app.listen(PORT, () =>
   console.log(`Server Running 🚩🚩🚩 @ http://localhost:${PORT}`)
 );
-  // Bill Upload
-
-
-
-
-
-
-
 
 function ensureAdmin(req, res, next) {
   if (req.user.roleName === roles.admin) {
@@ -123,4 +107,3 @@ function ensureAdmin(req, res, next) {
     res.redirect("/");
   }
 }
-
