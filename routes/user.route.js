@@ -5,6 +5,7 @@ const { exec } = require("child_process");
 const path = require("path");
 const Image = require("../models/image.model.js");
 const Task = require("../models/task.model.js");
+const nodemailer = require("nodemailer")
 
 router.get("/dashboard", async (req, res, next) => {
   try {
@@ -118,6 +119,7 @@ router.delete("/manage-event/delete-task", async (req, res, next) => {
     next(err);
   }
 });
+
 router.get("/eventr", async (req, res, next) => {
   try {
     res.render("eventr");
@@ -125,6 +127,49 @@ router.get("/eventr", async (req, res, next) => {
     next(err);
   }
 });
+router.get("/eventr/email-alert", async (req, res, next) => {
+  try {
+    res.render("email_alert");
+  } catch (err) {
+    next(err);
+  }
+});
+router.post("/eventr/email-alert", async (req, res, next) => {
+  try {
+    console.log(req.body);
+    var from = 'eventmanagement4444@gmail.com';
+    var to = req.body['to'];
+    var subject = req.body['subject'];
+    var message = req.body['message'];
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'eventmanagement4444@gmail.com',
+          pass: 'rqoloehfasycbhyu'
+        }
+    });
+
+    var mailOptions = {
+        from: from,
+        to:to,
+        subject:subject,
+        text:message
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("Email Sent: " + info.response);
+           res.render('email_alert',{success:"true"});
+        }  
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 router.get("/manage-event", async (req, res, next) => {
   try {
