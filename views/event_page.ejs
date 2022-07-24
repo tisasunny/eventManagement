@@ -22,7 +22,7 @@
       <form method="get" action="/user/manage-event/upload-bill">
         <input type="submit" id="new-task-upload" value="Upload" />
       </form>
-      <form method="get" action="/user/generate-report">
+      <form method="get" action="/user/manage-event/generate-report">
         <input type="submit" id="new-task-generate" value="Generate Report" />
       </form>
     </header>
@@ -34,7 +34,7 @@
           <% tasks.forEach(function(task) { %>
 		  <script src="/event_page.js"></script>
 		  <script>
-			addTask('<%= task._id%>','<%= task.taskName %>');
+			addTask('<%= task._id%>','<%= task.taskName %>','<%= task.isDone%>','<%= task.budget%>','<%=task.subcoordinator%>');
 		  </script>
           <% }); %>
         </div>
