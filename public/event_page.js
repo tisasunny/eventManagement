@@ -44,6 +44,7 @@ function addTask(taskId, taskName,isDone,budget,subcoordinator) {
   task_budget_el.type = "number";
   task_budget_el.placeholder = "Budget";
   task_budget_el.value= budget;
+  task_budget_el.setAttribute("readonly","readonly");
 
 
   const task_sub_el = document.createElement("textarea");
@@ -54,6 +55,7 @@ function addTask(taskId, taskName,isDone,budget,subcoordinator) {
   task_sub_el.cols = "40";
   task_sub_el.placeholder = "Subcoordinator";
   task_sub_el.innerText=subcoordinator;
+  task_sub_el.setAttribute("readonly","readonly");
 
   const task_edit_el = document.createElement("button");
   task_edit_el.classList.add("edit");
