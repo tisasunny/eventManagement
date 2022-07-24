@@ -17,6 +17,9 @@ const TaskSchema = new mongoose.Schema({
   subcoordinator: {
     type: String,
   },
+  isDone:{
+    type:Boolean,
+  }
 });
 const Task = mongoose.model('task', TaskSchema);
 module.exports = Task;
