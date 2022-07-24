@@ -4,6 +4,7 @@ const fs = require("fs");
 const { exec } = require("child_process");
 const path = require("path");
 const Image = require("../models/image.model.js");
+const Task = require("../models/task.model.js");
 
 router.get('/dashboard',async(req,res,next) => {
   try {
@@ -70,6 +71,16 @@ router.post("/manage-event/upload-bill", async (req, res, next) => {
   }
 });
 
+router.post("/manage-event/add-task", async (req, res, next) => {
+  console.log(req.body['taskName']);
+  console.log("User : "+req.user.email);
+
+  
+  const task=new Task({email:req.user.email,taskName:req.body['taskName'],budget:'0',subcoordinator:''});
+  task.save();
+  res.redirect("/user/manage-event");
+});
+
 router.get("/eventr", async (req, res, next) => {
   try {
     res.render("eventr");
@@ -80,7 +91,9 @@ router.get("/eventr", async (req, res, next) => {
 
 router.get("/manage-event", async (req, res, next) => {
   try {
-    res.render("event_page");
+    const tasksData=await Task.find({email:req.user.email});
+
+    res.render("event_page",{tasks:tasksData});
   } catch (err) {
     next(err);
   }
