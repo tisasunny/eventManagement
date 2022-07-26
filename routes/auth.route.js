@@ -31,7 +31,9 @@ router.get(
   "/logout",
   ensureLoggedIn({ redirectTo: "/user/dashboard" }),
   async (req, res, next) => {
-    req.logout();
+    req.logout((error)=>{
+      console.log(error)
+    });
     res.redirect("/");
   }
 );
