@@ -21,28 +21,23 @@ router.get("/manage-event/generate-report", async (req, res, next) => {
     console.log("Generate epoort");
     let list = "";
     const docs = await Image.find({ email: `${req.user.email}` });
-   // const tasks = await Task.find({ email: req.user.email });
+    const taskData = await Task.find({ email: req.user.email });
 
     console.log(docs);
     if (docs.length == 0) {
       throw new Error("You have not uploaded any images to generate report");
     }
-    // tasks.forEach((task) => {
-    // });
+    
+    let imagePaths=[]
     docs.forEach((doc) => {
-      list = list + " " + doc.imagePath;
+     imagePaths.push((doc.imagePath).split('c')[1]);
     });
 
-    list = list.trim();
-    console.log(list);
-    let outputFilePath = Date.now() + "-report.pdf";
-    exec(`magick convert ${list} ${outputFilePath}`, (err, stderr, stdout) => {
-      if (err) throw err;
-      res.download(outputFilePath, (err) => {
-        if (err) throw err;
-        fs.unlinkSync(outputFilePath);
-      });
+    imagePaths.forEach((doc) => {
+     console.log("PATH:"+doc);
     });
+
+    res.render('report',{tasks : taskData , images : imagePaths});
   } catch (error) {
     console.log(error);
     res.send(
