@@ -11,10 +11,10 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="canvas_div_pdf">
+    <div style="margin:20px;" id="canvas_div_pdf">
         <% tasks.forEach(task => {  %> 
-            <h2 style="text-decoration=underline;"><%= task.taskName.toUpperCase() %> </h2>
-            <p><b>Subcoordinator : </b> <%= task.subcoordinator.toUpperCase() %>  || <b> Budget : </b> <%= task.budget %> </p>
+            <h2 style="text-decoration:underline;"><%= task.taskName.toUpperCase() %> </h2>
+            <p><b>Subcoordinator : </b> <%= task.subcoordinator.toUpperCase() %> &nbsp;&nbsp;|| <b> Budget : </b> <%= task.budget %> </p>
         <% }) %> 
         <% images.forEach(img => { %>
             <img style="width:500px ; margin-left : 20px;" src="<%= img  %>"/> 
